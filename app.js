@@ -63,29 +63,24 @@ async function updateTotalQuestions(questions) {
     totalQuestionsSpan.innerText = questions.length;
 }
 
-function choiceCorrect(choiceValue, questionObj) {
-    console.log(choiceValue);
-    console.log(questionObj.options.indexOf(choiceValue));
-    console.log(questionObj);
-    console.log(questionObj.answer);
+function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
+    const allOptionDivs = document.querySelectorAll(".option-div");
+    const correctAnswerIndex = questionObj.answer;
+    const userAnswerValue = clickedChoiceElement.innerText;
+    const correctChoiceDiv = allOptionDivs[correctAnswerIndex];
+    const correctChoiceValue = correctChoiceDiv.innerText;
 
-    if (questionObj.options.indexOf(choiceValue) === questionObj.answer) {
-        return true;
+    // if answer is correct, make green add point
+    // otherwise make all read except correct answer
+    if (userAnswerValue === correctChoiceValue) {
+        clickedChoiceElement.classList.remove("bg-warning");
+        clickedChoiceElement.classList.add("bg-success");
     } else {
-        return false;
+        clickedChoiceElement.classList.remove("bg-warning");
+        clickedChoiceElement.classList.add("bg-danger");
+        correctChoiceDiv.classList.remove("bg-warning");
+        correctChoiceDiv.classList.add("bg-success");
     }
-}
-
-function updateOptionDivCorrect(element) {
-    console.log("correct");
-    element.classList.remove("bg-warning");
-    element.classList.add("bg-success");
-}
-
-function updateOptionDivWrong(element) {
-    console.log("incorrect");
-    element.classList.remove("bg-warning");
-    element.classList.add("bg-danger");
 }
 
 async function displayQuestionGetAnswer(questionIndex, questionObj) {
@@ -100,7 +95,7 @@ async function displayQuestionGetAnswer(questionIndex, questionObj) {
             // check if correct
             // if incorrect, make red & make correct option green & return correct FALSE
             // if correct, make green & return correct TRUE
-            choiceCorrect(clickedElement.innerText, questionObj) ? updateOptionDivCorrect(clickedElement) : updateOptionDivWrong(clickedElement);
+            checkAnswerUpdateOptions(clickedElement, questionObj);
         }
     });
 }
