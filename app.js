@@ -32,11 +32,10 @@ async function createOptions(questionObj) {
         const optionRow = document.createElement("div");
         const optionCol = document.createElement("div");
         optionRow.classList.add("row", "mb-2", "justify-content-center");
-        optionCol.classList.add("col-6", "text-center", "bg-warning", "border");
+        optionCol.classList.add("text-center", "ps-5", "pe-5", "col-auto", "bg-warning", "border");
         optionCol.innerText = option;
-        // Add col (option) to row
+        // Add col (option) to row & add complete option to option-container
         optionRow.appendChild(optionCol);
-        // Add complete option to option-container
         optionsContainer.appendChild(optionRow);
     });
 }
@@ -54,7 +53,7 @@ async function loadQuestionInfo(questionObj) {
     questionContentCol.appendChild(questionText);
 }
 
-async function loadQuestionIndex(questionIndex) {
+async function loadQuestionNumber(questionIndex) {
     const questionIndexSpan = document.querySelector("#question-index");
     questionIndexSpan.innerText = questionIndex;
 }
@@ -64,9 +63,31 @@ async function updateTotalQuestions(questions) {
     totalQuestionsSpan.innerText = questions.length;
 }
 
+//
+async function displayQuestion(questionIndex, questionObj) {
+    await loadQuestionNumber(questionIndex + 1);
+    console.log("hello");
+    await loadQuestionInfo(questionObj);
+    await createOptions(questionObj);
+}
+
+async function welcomePageDisplay() {
+    const quizContainer = document.querySelector("#quick-container");
+}
+
 async function main() {
     const QUESTIONS = await loadQuestions();
-    await createOptions(QUESTIONS[0]);
+    const submitAnswerButton = document.querySelector("#submit-answer-button");
+    const optionsContainer = document.querySelector("#options-container");
+    const currentQuestionIndex = 0;
+
+    await displayQuestion(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
+    optionsContainer.addEventListener("click", (e) => {
+        e.target.style.backgroundColor = "red";
+    });
+
+    await updateTotalQuestions(QUESTIONS);
+    submitAnswerButton.addEventListener("click", submitAnswer);
 }
 
 main();
