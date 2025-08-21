@@ -22,11 +22,11 @@ async function loadQuestions() {
     }
 }
 
-async function createOptions(question) {
+async function createOptions(questionObj) {
     const optionsContainer = document.querySelector("#options-container");
-    const questionOptions = question.options;
+    const questionOptions = questionObj.options;
 
-    //Clear options & create "button" div for each option available for this question'
+    // Clear options & create "button" div for each option available for this question'
     optionsContainer.innerHTML = "";
     questionOptions.forEach((option) => {
         const optionRow = document.createElement("div");
@@ -41,15 +41,32 @@ async function createOptions(question) {
     });
 }
 
-async function loadQuestionInfo(question) {
-    const questionContainer = document.querySelector("#question-container");
-    
+async function loadQuestionInfo(questionObj) {
+    // Load BS .col where header (question) element will go
+    const questionContentCol = document.querySelector("#q-content-col");
 
+    // Create header of question
+    const questionText = document.createElement("h4");
+    questionText.classList.add("text-center", "text-secondary");
+    questionText.innerText = questionObj.question;
 
+    // Add question header to BS .col
+    questionContentCol.appendChild(questionText);
+}
+
+async function loadQuestionIndex(questionIndex) {
+    const questionIndexSpan = document.querySelector("#question-index");
+    questionIndexSpan.innerText = questionIndex;
+}
+
+async function updateTotalQuestions(questions) {
+    const totalQuestionsSpan = document.querySelector("#num-questions");
+    totalQuestionsSpan.innerText = questions.length;
 }
 
 async function main() {
     const QUESTIONS = await loadQuestions();
+    await createOptions(QUESTIONS[0]);
 }
 
 main();
