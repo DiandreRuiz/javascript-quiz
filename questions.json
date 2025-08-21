@@ -1,0 +1,9 @@
+{
+    "questions" : [
+        {
+            "question" : "What typographical convention is considered best practice when writing Javascript?",
+            "options" : ["camelCase", "snake_case", "PascalCase", "lowercase"],
+            "answer" : 0
+        }
+    ]
+}
