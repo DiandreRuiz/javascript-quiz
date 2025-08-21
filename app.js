@@ -89,27 +89,29 @@ async function displayQuestionGetAnswer(questionIndex, questionObj) {
     await createOptions(questionObj);
 
     const optionsContainer = document.querySelector("#options-container");
+    const nextQuestionButton = document.querySelector("#next-question-button");
+
+    // wait for an answer before you can move on
+    nextQuestionButton.disabled = true;
     optionsContainer.addEventListener("click", (e) => {
         const clickedElement = e.target;
         if (clickedElement.matches(".option-div")) {
-            // check if correct
-            // if incorrect, make red & make correct option green & return correct FALSE
-            // if correct, make green & return correct TRUE
             checkAnswerUpdateOptions(clickedElement, questionObj);
+            nextQuestionButton.disabled = false;
         }
     });
 }
 
 async function main() {
     const QUESTIONS = await loadQuestions();
+    await updateTotalQuestions(QUESTIONS);
     const currentQuestionIndex = 0;
     const score = 0;
 
-    const submitAnswerButton = document.querySelector("#next-question-button");
-
     // Show current question & Track selection
     await displayQuestionGetAnswer(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
-    await updateTotalQuestions(QUESTIONS);
+
+
 }
 
 main();
