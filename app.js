@@ -32,7 +32,7 @@ async function createOptions(questionObj) {
         const optionRow = document.createElement("div");
         const optionCol = document.createElement("div");
         optionRow.classList.add("row", "mb-2", "justify-content-center");
-        optionCol.classList.add("text-center", "ps-5", "pe-5", "col-auto", "bg-warning", "border");
+        optionCol.classList.add("text-center", "ps-5", "pe-5", "col-auto", "bg-warning", "border", "option-div");
         optionCol.innerText = option;
         // Add col (option) to row & add complete option to option-container
         optionRow.appendChild(optionCol);
@@ -66,13 +66,8 @@ async function updateTotalQuestions(questions) {
 //
 async function displayQuestion(questionIndex, questionObj) {
     await loadQuestionNumber(questionIndex + 1);
-    console.log("hello");
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
-}
-
-async function welcomePageDisplay() {
-    const quizContainer = document.querySelector("#quick-container");
 }
 
 async function main() {
@@ -81,13 +76,15 @@ async function main() {
     const optionsContainer = document.querySelector("#options-container");
     const currentQuestionIndex = 0;
 
+    // Show current question & Track selection
     await displayQuestion(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
     optionsContainer.addEventListener("click", (e) => {
-        e.target.style.backgroundColor = "red";
+        const clicked = e.target;
+        if (clicked.matches(".option-div")) {
+        }
     });
 
     await updateTotalQuestions(QUESTIONS);
-    submitAnswerButton.addEventListener("click", submitAnswer);
 }
 
 main();
