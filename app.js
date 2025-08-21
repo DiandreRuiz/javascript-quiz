@@ -63,27 +63,55 @@ async function updateTotalQuestions(questions) {
     totalQuestionsSpan.innerText = questions.length;
 }
 
-//
-async function displayQuestion(questionIndex, questionObj) {
+function choiceCorrect(choiceValue, questionObj) {
+    console.log(choiceValue);
+    console.log(questionObj);
+
+    if (questionObj.options.indexOf(choiceValue) === questionObj.options.answer) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function updateOptionDivCorrect(element) {
+    console.log("correct");
+    element.classList.remove("bg-warning");
+    element.classList.add("bg-success");
+}
+
+function updateOptionDivWrong(element) {
+    console.log("incorrect");
+    element.classList.remove("bg-warning");
+    element.classList.add("bg-danger");
+}
+
+async function displayQuestionGetAnswer(questionIndex, questionObj) {
     await loadQuestionNumber(questionIndex + 1);
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
+
+    const optionsContainer = document.querySelector("#options-container");
+    optionsContainer.addEventListener("click", (e) => {
+        const clickedElement = e.target;
+        if (clickedElement.matches(".option-div")) {
+            // check if correct
+            // if incorrect, make red & make correct option green & return correct FALSE
+            // if correct, make green & return correct TRUE
+            choiceCorrect(clickedElement.innerText, questionObj) ? updateOptionDivCorrect(clickedElement) : updateOptionDivWrong(clickedElement);
+        }
+    });
 }
 
 async function main() {
     const QUESTIONS = await loadQuestions();
-    const submitAnswerButton = document.querySelector("#submit-answer-button");
-    const optionsContainer = document.querySelector("#options-container");
     const currentQuestionIndex = 0;
+    const score = 0;
+
+    const submitAnswerButton = document.querySelector("#next-question-button");
 
     // Show current question & Track selection
-    await displayQuestion(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
-    optionsContainer.addEventListener("click", (e) => {
-        const clicked = e.target;
-        if (clicked.matches(".option-div")) {
-        }
-    });
-
+    await displayQuestionGetAnswer(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
     await updateTotalQuestions(QUESTIONS);
 }
 
