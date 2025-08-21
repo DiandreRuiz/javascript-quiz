@@ -65,9 +65,11 @@ async function updateTotalQuestions(questions) {
 
 function choiceCorrect(choiceValue, questionObj) {
     console.log(choiceValue);
+    console.log(questionObj.options.indexOf(choiceValue));
     console.log(questionObj);
+    console.log(questionObj.answer);
 
-    if (questionObj.options.indexOf(choiceValue) === questionObj.options.answer) {
+    if (questionObj.options.indexOf(choiceValue) === questionObj.answer) {
         return true;
     } else {
         return false;
