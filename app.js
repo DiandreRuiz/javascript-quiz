@@ -1,15 +1,3 @@
-// Create question object:
-// {
-//      question: string (question being asked),
-//      options: array (all possible options),
-//      answer: int (index of correct answer)
-// }
-
-// TODO:
-// 1. Create elements based on the "col" bootstrap elements for each option
-// 2. Add these elements to the options container upon creation
-//
-
 // Create all questions for this session from config
 async function loadQuestions() {
     try {
@@ -58,9 +46,9 @@ async function loadQuestionNumber(questionIndex) {
     questionIndexSpan.innerText = questionIndex;
 }
 
-async function updateTotalQuestions(questions) {
+async function updateTotalQuestions() {
     const totalQuestionsSpan = document.querySelector("#num-questions");
-    totalQuestionsSpan.innerText = questions.length;
+    totalQuestionsSpan.innerText = quizState.questions.length;
 }
 
 function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
@@ -75,6 +63,7 @@ function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
     if (userAnswerValue === correctChoiceValue) {
         clickedChoiceElement.classList.remove("bg-warning");
         clickedChoiceElement.classList.add("bg-success");
+        quizState.score++;
     } else {
         clickedChoiceElement.classList.remove("bg-warning");
         clickedChoiceElement.classList.add("bg-danger");
@@ -83,7 +72,21 @@ function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
     }
 }
 
-async function displayQuestionGetAnswer(questionIndex, questionObj) {
+async function advanceQuiz() {
+    // TODO: Figure out logic for advancing quiz when "next" is clicked & changing button text for last question
+    const lastQuestionIndex = quizState.questions.length - 1;
+    if (quizState.questionIndex < lastQuestionIndex) {
+    }
+
+    nextQuestionButton.addEventListener("click", () => {
+        quizState.questionIndex++;
+    });
+}
+
+async function displayQuestionGetAnswer() {
+    const questionIndex = quizState.questionIndex;
+    const questionObj = quizState.questions[questionIndex];
+
     await loadQuestionNumber(questionIndex + 1);
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
@@ -102,16 +105,13 @@ async function displayQuestionGetAnswer(questionIndex, questionObj) {
     });
 }
 
+// State for quiz (Not scalable but good enough for demo)
+const quizState = { questionIndex: 0, score: 0, questions: [] };
+
 async function main() {
-    const QUESTIONS = await loadQuestions();
-    await updateTotalQuestions(QUESTIONS);
-    const currentQuestionIndex = 0;
-    const score = 0;
-
-    // Show current question & Track selection
-    await displayQuestionGetAnswer(currentQuestionIndex, QUESTIONS[currentQuestionIndex]);
-
-
+    quizState.questions = await loadQuestions();
+    await updateTotalQuestions();
+    await displayQuestionGetAnswer();
 }
 
 main();
