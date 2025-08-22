@@ -85,6 +85,17 @@ function optionsClickable(enable) {
     }
 }
 
+function optionClickDelegation(e) {
+    const clickedElement = e.target;
+    const nextQuestionButton = document.querySelector("#next-question-button");
+
+    if (clickedElement.matches(".option-div")) {
+        checkAnswer(clickedElement);
+        nextQuestionButton.disabled = false;
+        optionsClickable(false);
+    }
+}
+
 function initializeButtonListeners() {
     const nextQuestionButton = document.querySelector("#next-question-button");
     const optionsContainer = document.querySelector("#options-container");
@@ -95,15 +106,7 @@ function initializeButtonListeners() {
     });
 
     // tracking of choices
-    optionsContainer.addEventListener("click", (e) => {
-        console.log(e.target);
-        const clickedElement = e.target;
-        if (clickedElement.matches(".option-div")) {
-            checkAnswer(clickedElement);
-            nextQuestionButton.disabled = false;
-            optionsClickable(false);
-        }
-    });
+    optionsContainer.addEventListener("click", optionClickDelegation);
 }
 
 function advanceQuiz() {
@@ -121,10 +124,25 @@ function advanceQuiz() {
 }
 
 function displayScore() {
-    window.location.replace("/score.html");
+    const userScore = quizState.score;
+    const possiblePoints = quizState.questions.length;
+    const quizContainer = document.querySelector("#quiz-container");
+    const scoreHeading = document.createElement("h1");
+    const scoreFraction = document.createElement("h2");
+    const nextQuestionButton = document.querySelector("#next-question-button");
 
-    const scoreDisplay = document.querySelector("#user-score");
-    const possiblePoints = document.querySelector("#possible-points");
+    // Display Score
+    quizContainer.innerHTML = "";
+    quizContainer.classList.add("text-center");
+    scoreHeading.classList.add("text-primary");
+    scoreFraction.innerText = `${userScore}/${possiblePoints}`;
+    scoreHeading.innerText = "Your Score:";
+    quizContainer.appendChild(scoreHeading);
+    quizContainer.appendChild(scoreFraction);
+
+    // Offer a re-do of the quiz
+    nextQuestionButton.innerText = "Retry";
+    nextQuestionButton.removeEventListener("click", optionClickDelegation);
 }
 
 async function displayQuestion() {
