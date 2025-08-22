@@ -10,7 +10,7 @@ async function loadQuestions() {
     }
 }
 
-async function createOptions(questionObj) {
+function createOptions(questionObj) {
     const optionsContainer = document.querySelector("#options-container");
     const questionOptions = questionObj.options;
 
@@ -28,7 +28,7 @@ async function createOptions(questionObj) {
     });
 }
 
-async function loadQuestionInfo(questionObj) {
+function loadQuestionInfo(questionObj) {
     // Load BS .col where header (question) element will go
     const questionContentCol = document.querySelector("#q-content-col");
 
@@ -44,20 +44,17 @@ async function loadQuestionInfo(questionObj) {
     questionContentCol.appendChild(questionText);
 }
 
-async function loadQuestionNumber() {
+function loadQuestionNumber() {
     const questionIndexSpan = document.querySelector("#question-index");
     questionIndexSpan.innerText = quizState.questionIndex + 1;
 }
 
-async function updateTotalQuestions() {
+function updateTotalQuestions() {
     const totalQuestionsSpan = document.querySelector("#num-questions");
     totalQuestionsSpan.innerText = quizState.questions.length;
 }
 
-function checkAnswerUpdateOptions(clickedChoiceElement) {
-    // TODO: Figure out why starting @ question 2, you can re-select
-    // TODO: correct answer and it will be red
-
+function checkAnswer(clickedChoiceElement) {
     const allOptionDivs = document.querySelectorAll(".option-div");
     const questionObj = quizState.questions[quizState.questionIndex];
     const correctAnswerIndex = questionObj.answer;
@@ -93,7 +90,6 @@ function initializeButtonListeners() {
     const optionsContainer = document.querySelector("#options-container");
 
     // next question button initially disabled
-    nextQuestionButton.disabled = true;
     nextQuestionButton.addEventListener("click", () => {
         advanceQuiz();
     });
@@ -103,7 +99,7 @@ function initializeButtonListeners() {
         console.log(e.target);
         const clickedElement = e.target;
         if (clickedElement.matches(".option-div")) {
-            checkAnswerUpdateOptions(clickedElement);
+            checkAnswer(clickedElement);
             nextQuestionButton.disabled = false;
             optionsClickable(false);
         }
@@ -111,29 +107,39 @@ function initializeButtonListeners() {
 }
 
 function advanceQuiz() {
-    if (quizState.questionIndex < quizState.questions.length) {
+    console.log(quizState.questionIndex);
+    // if next question is within proper bounds, show next question
+    // otherwise show score
+    if (quizState.questionIndex + 1 < quizState.questions.length) {
         quizState.questionIndex++;
         optionsClickable(true);
         displayQuestion();
     } else {
+        console.log("HERE");
         displayScore();
     }
 }
 
-function displayScore() {}
+function displayScore() {
+    window.location.replace("/score.html");
+
+    const scoreDisplay = document.querySelector("#user-score");
+    const possiblePoints = document.querySelector("#possible-points");
+}
 
 async function displayQuestion() {
     const questionIndex = quizState.questionIndex;
     const questionObj = quizState.questions[questionIndex];
-    const nextQuestionButton = document.querySelector("#next-question-button")
+    const nextQuestionButton = document.querySelector("#next-question-button");
 
+    nextQuestionButton.disabled = true;
     if (questionIndex === quizState.questions.length - 1) {
         nextQuestionButton.innerText = "Check Score";
     }
 
-    await loadQuestionNumber();
-    await loadQuestionInfo(questionObj);
-    await createOptions(questionObj);
+    loadQuestionNumber();
+    loadQuestionInfo(questionObj);
+    createOptions(questionObj);
 }
 
 // State for quiz (Not scalable but good enough for demo)
@@ -142,8 +148,8 @@ const quizState = { questionIndex: 0, score: 0, questions: [] };
 async function main() {
     quizState.questions = await loadQuestions();
     initializeButtonListeners();
-    await updateTotalQuestions();
-    await displayQuestion();
+    updateTotalQuestions();
+    displayQuestion();
 }
 
 main();
