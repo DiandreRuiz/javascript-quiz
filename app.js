@@ -55,6 +55,10 @@ async function updateTotalQuestions() {
 }
 
 function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
+
+    // TODO: Figure out why starting @ question 2, you can re-select
+    // TODO: correct answer and it will be red
+    
     const allOptionDivs = document.querySelectorAll(".option-div");
     const correctAnswerIndex = questionObj.answer;
     const userAnswerValue = clickedChoiceElement.innerText;
@@ -108,10 +112,6 @@ async function displayQuestionGetAnswer() {
     await loadQuestionNumber();
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
-
-    // Set up next question button to advance the quiz questions
-    // TODO: Figure out where to integrate this step so that it's not repeated
-    // TODO: each time we display the next question
 
     // wait for an answer before you can move on
     nextQuestionButton.disabled = true;
