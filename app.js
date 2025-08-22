@@ -76,23 +76,28 @@ async function advanceQuiz() {
     // TODO: Figure out logic for advancing quiz when "next" is clicked & changing button text for last question
     const lastQuestionIndex = quizState.questions.length - 1;
     if (quizState.questionIndex < lastQuestionIndex) {
+        quizState.
     }
 
-    nextQuestionButton.addEventListener("click", () => {
-        quizState.questionIndex++;
-    });
 }
 
 async function displayQuestionGetAnswer() {
     const questionIndex = quizState.questionIndex;
     const questionObj = quizState.questions[questionIndex];
+    const optionsContainer = document.querySelector("#options-container");
+    const nextQuestionButton = document.querySelector("#next-question-button");
 
     await loadQuestionNumber(questionIndex + 1);
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
-
-    const optionsContainer = document.querySelector("#options-container");
-    const nextQuestionButton = document.querySelector("#next-question-button");
+    
+    // Set up next question button to advance the quiz questions
+    // TODO: Figure out where to integrate this step so that it's not repeated
+    // TODO: each time we display the next question
+    nextQuestionButton.addEventListener("click", () => {
+        quizState.questionIndex++;
+        await advanceQuiz();
+    });
 
     // wait for an answer before you can move on
     nextQuestionButton.disabled = true;
@@ -110,6 +115,7 @@ const quizState = { questionIndex: 0, score: 0, questions: [] };
 
 async function main() {
     quizState.questions = await loadQuestions();
+
     await updateTotalQuestions();
     await displayQuestionGetAnswer();
 }
