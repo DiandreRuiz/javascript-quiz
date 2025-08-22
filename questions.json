@@ -1,24 +1,44 @@
 {
-    "questions" : [
+    "questions": [
         {
-            "question" : "What typographical convention is considered best practice when writing Javascript?",
-            "options" : ["camelCase", "snake_case", "PascalCase", "lowercase"],
-            "answer" : 0
+            "question": "What typographical convention is considered best practice when writing Javascript?",
+            "options": [
+                "camelCase",
+                "snake_case",
+                "PascalCase",
+                "lowercase"
+            ],
+            "answer": 0
         },
         {
-            "question" : "What is the DOM?",
-            "options" : [
+            "question": "What is the DOM?",
+            "options": [
                 "The protocol that websites use to talk to one another in a structured manner",
                 "A programming language that allows for faster runtime in environments meant for legacy software",
                 "A model (tree) of all HTML elements in an HTML document. Useful for Javascript to read, modify, add or delete content",
                 "A piece of software that dominates submissive software, allowing for prioritzation within modern web applications"
             ],
-            "answer" : 2
+            "answer": 2
         },
         {
-            "question" : "Javascript is a subset of the Java programming language.",
-            "options" : ["True", "False"],
-            "answer" : 1
+            "question": "Javascript is a subset of the Java programming language.",
+            "options": [
+                "True",
+                "False"
+            ],
+            "answer": 1
+        },
+        {
+            "question": "This is a test of more options being present",
+            "options": [
+                "Option0",
+                "Option1",
+                "Option2",
+                "Option3",
+                "Option4",
+                "Option5"
+            ],
+            "answer": 1
         }
     ]
 }
