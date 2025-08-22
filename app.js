@@ -126,23 +126,31 @@ function advanceQuiz() {
 function displayScore() {
     const userScore = quizState.score;
     const possiblePoints = quizState.questions.length;
-    const quizContainer = document.querySelector("#quiz-container");
+    const optionsContainer = document.querySelector("#options-container");
+    const questionsContainer = document.querySelector("#questions-container");
     const scoreHeading = document.createElement("h1");
     const scoreFraction = document.createElement("h2");
     const nextQuestionButton = document.querySelector("#next-question-button");
 
     // Display Score
-    quizContainer.innerHTML = "";
-    quizContainer.classList.add("text-center");
+    questionsContainer.innerHTML = "";
+    optionsContainer.innerHTML = "";
+
+    questionsContainer.classList.add("text-center");
     scoreHeading.classList.add("text-primary");
+
     scoreFraction.innerText = `${userScore}/${possiblePoints}`;
     scoreHeading.innerText = "Your Score:";
-    quizContainer.appendChild(scoreHeading);
-    quizContainer.appendChild(scoreFraction);
+
+    questionsContainer.appendChild(scoreHeading);
+    questionsContainer.appendChild(scoreFraction);
 
     // Offer a re-do of the quiz
     nextQuestionButton.innerText = "Retry";
     nextQuestionButton.removeEventListener("click", optionClickDelegation);
+    nextQuestionButton.addEventListener("click", () => {
+        window.location.replace("/index.html");
+    });
 }
 
 async function displayQuestion() {
