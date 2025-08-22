@@ -110,7 +110,6 @@ function initializeButtonListeners() {
 }
 
 function advanceQuiz() {
-    console.log(quizState.questionIndex);
     // if next question is within proper bounds, show next question
     // otherwise show score
     if (quizState.questionIndex + 1 < quizState.questions.length) {
@@ -118,7 +117,6 @@ function advanceQuiz() {
         optionsClickable(true);
         displayQuestion();
     } else {
-        console.log("HERE");
         displayScore();
     }
 }
