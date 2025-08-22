@@ -54,12 +54,12 @@ async function updateTotalQuestions() {
     totalQuestionsSpan.innerText = quizState.questions.length;
 }
 
-function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
-
+function checkAnswerUpdateOptions(clickedChoiceElement) {
     // TODO: Figure out why starting @ question 2, you can re-select
     // TODO: correct answer and it will be red
-    
+
     const allOptionDivs = document.querySelectorAll(".option-div");
+    const questionObj = quizState.questions[quizState.questionIndex];
     const correctAnswerIndex = questionObj.answer;
     const userAnswerValue = clickedChoiceElement.innerText;
     const correctChoiceDiv = allOptionDivs[correctAnswerIndex];
@@ -79,10 +79,42 @@ function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
     }
 }
 
+function optionsClickable(enable) {
+    const optionsContainer = document.querySelector("#options-container");
+    if (enable) {
+        optionsContainer.style.pointerEvents = "auto";
+    } else {
+        optionsContainer.style.pointerEvents = "none";
+    }
+}
+
+function initializeButtonListeners() {
+    const nextQuestionButton = document.querySelector("#next-question-button");
+    const optionsContainer = document.querySelector("#options-container");
+
+    // next question button initially disabled
+    nextQuestionButton.disabled = true;
+    nextQuestionButton.addEventListener("click", () => {
+        advanceQuiz();
+    });
+
+    // tracking of choices
+    optionsContainer.addEventListener("click", (e) => {
+        console.log(e.target);
+        const clickedElement = e.target;
+        if (clickedElement.matches(".option-div")) {
+            checkAnswerUpdateOptions(clickedElement);
+            nextQuestionButton.disabled = false;
+            optionsClickable(false);
+        }
+    });
+}
+
 function advanceQuiz() {
     if (quizState.questionIndex < quizState.questions.length) {
         quizState.questionIndex++;
-        displayQuestionGetAnswer();
+        optionsClickable(true);
+        displayQuestion();
     } else {
         displayScore();
     }
@@ -90,19 +122,10 @@ function advanceQuiz() {
 
 function displayScore() {}
 
-function initializeButtonListeners() {
-    // Check if final question so we can update text on "Next" button
-    const nextQuestionButton = document.querySelector("#next-question-button");
-    nextQuestionButton.addEventListener("click", () => {
-        advanceQuiz();
-    });
-}
-
-async function displayQuestionGetAnswer() {
+async function displayQuestion() {
     const questionIndex = quizState.questionIndex;
     const questionObj = quizState.questions[questionIndex];
-    const optionsContainer = document.querySelector("#options-container");
-    const nextQuestionButton = document.querySelector("#next-question-button");
+    const nextQuestionButton = document.querySelector("#next-question-button")
 
     if (questionIndex === quizState.questions.length - 1) {
         nextQuestionButton.innerText = "Check Score";
@@ -111,16 +134,6 @@ async function displayQuestionGetAnswer() {
     await loadQuestionNumber();
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
-
-    // wait for an answer before you can move on
-    nextQuestionButton.disabled = true;
-    optionsContainer.addEventListener("click", (e) => {
-        const clickedElement = e.target;
-        if (clickedElement.matches(".option-div")) {
-            checkAnswerUpdateOptions(clickedElement, questionObj);
-            nextQuestionButton.disabled = false;
-        }
-    });
 }
 
 // State for quiz (Not scalable but good enough for demo)
@@ -130,7 +143,7 @@ async function main() {
     quizState.questions = await loadQuestions();
     initializeButtonListeners();
     await updateTotalQuestions();
-    await displayQuestionGetAnswer();
+    await displayQuestion();
 }
 
 main();
