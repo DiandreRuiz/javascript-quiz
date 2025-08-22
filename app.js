@@ -96,7 +96,6 @@ function initializeButtonListeners() {
     nextQuestionButton.addEventListener("click", () => {
         advanceQuiz();
     });
-    ``;
 }
 
 async function displayQuestionGetAnswer() {
