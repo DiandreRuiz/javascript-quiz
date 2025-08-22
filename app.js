@@ -32,6 +32,9 @@ async function loadQuestionInfo(questionObj) {
     // Load BS .col where header (question) element will go
     const questionContentCol = document.querySelector("#q-content-col");
 
+    // Clear previous question content
+    questionContentCol.innerHTML = "";
+
     // Create header of question
     const questionText = document.createElement("h4");
     questionText.classList.add("text-center", "text-secondary");
@@ -41,9 +44,9 @@ async function loadQuestionInfo(questionObj) {
     questionContentCol.appendChild(questionText);
 }
 
-async function loadQuestionNumber(questionIndex) {
+async function loadQuestionNumber() {
     const questionIndexSpan = document.querySelector("#question-index");
-    questionIndexSpan.innerText = questionIndex;
+    questionIndexSpan.innerText = quizState.questionIndex + 1;
 }
 
 async function updateTotalQuestions() {
@@ -72,13 +75,24 @@ function checkAnswerUpdateOptions(clickedChoiceElement, questionObj) {
     }
 }
 
-async function advanceQuiz() {
-    // TODO: Figure out logic for advancing quiz when "next" is clicked & changing button text for last question
-    const lastQuestionIndex = quizState.questions.length - 1;
-    if (quizState.questionIndex < lastQuestionIndex) {
-        quizState.
+function advanceQuiz() {
+    if (quizState.questionIndex < quizState.questions.length) {
+        quizState.questionIndex++;
+        displayQuestionGetAnswer();
+    } else {
+        displayScore();
     }
+}
 
+function displayScore() {}
+
+function initializeButtonListeners() {
+    // Check if final question so we can update text on "Next" button
+    const nextQuestionButton = document.querySelector("#next-question-button");
+    nextQuestionButton.addEventListener("click", () => {
+        advanceQuiz();
+    });
+    ``;
 }
 
 async function displayQuestionGetAnswer() {
@@ -87,17 +101,17 @@ async function displayQuestionGetAnswer() {
     const optionsContainer = document.querySelector("#options-container");
     const nextQuestionButton = document.querySelector("#next-question-button");
 
-    await loadQuestionNumber(questionIndex + 1);
+    if (questionIndex === quizState.questions.length - 1) {
+        nextQuestionButton.innerText = "Check Score";
+    }
+
+    await loadQuestionNumber();
     await loadQuestionInfo(questionObj);
     await createOptions(questionObj);
-    
+
     // Set up next question button to advance the quiz questions
     // TODO: Figure out where to integrate this step so that it's not repeated
     // TODO: each time we display the next question
-    nextQuestionButton.addEventListener("click", () => {
-        quizState.questionIndex++;
-        await advanceQuiz();
-    });
 
     // wait for an answer before you can move on
     nextQuestionButton.disabled = true;
@@ -115,7 +129,7 @@ const quizState = { questionIndex: 0, score: 0, questions: [] };
 
 async function main() {
     quizState.questions = await loadQuestions();
-
+    initializeButtonListeners();
     await updateTotalQuestions();
     await displayQuestionGetAnswer();
 }
