@@ -27,18 +27,6 @@
                 "False"
             ],
             "answer": 1
-        },
-        {
-            "question": "This is a test of more options being present",
-            "options": [
-                "Option0",
-                "Option1",
-                "Option2",
-                "Option3",
-                "Option4",
-                "Option5"
-            ],
-            "answer": 1
         }
     ]
 }
